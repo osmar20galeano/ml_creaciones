@@ -1,0 +1,156 @@
+body {
+    background-color: var(--gris-fondo);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* --- NAVBAR --- */
+
+.navbar-custom {
+    background-color: var(--blanco-puro);
+    border-bottom: 4px solid var(--dorado-metalico);
+}
+
+.navbar-brand-custom {
+    color: var(--dorado-metalico) !important;
+    font-size: 1.35rem;
+    font-weight: bold;
+}
+
+.italic-slogan {
+    font-style: italic;
+    color: var(--gris-texto);
+    font-size: 0.88rem;
+}
+
+.logo-tienda {
+    height: 70px;
+    width: 70px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* --- UTILIDADES DE MARCA --- */
+
+.text-gold {
+    color: var(--dorado-oscuro);
+    font-weight: 600;
+}
+
+.border-gold {
+    border: 1px solid var(--dorado-metalico) !important;
+}
+
+.text-purple {
+    color: var(--morado-claro);
+    font-weight: 500;
+}
+
+.text-xs {
+    font-size: 0.75rem !important;
+}
+
+/* --- TARJETAS Y BOTONES --- */
+
+.card-custom {
+    border: 1px solid var(--rosa-medio);
+    background-color: var(--blanco-puro);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-custom:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-header-custom {
+    background-color: var(--rosa-pastel);
+    color: var(--morado);
+    font-weight: bold;
+}
+
+.btn-custom {
+    background-color: var(--dorado-metalico);
+    color: var(--blanco-puro);
+    border: none;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+.btn-custom:hover,
+.btn-custom:focus-visible {
+    background-color: var(--dorado-hover);
+    color: var(--blanco-puro);
+}
+
+.btn-custom:disabled {
+    background-color: var(--dorado-metalico);
+    color: var(--blanco-puro);
+    opacity: 0.5;
+}
+
+.table-custom th {
+    background-color: var(--rosa-pastel) !important;
+}
+
+/* --- CATÁLOGO --- */
+
+.contenedor-img-catalogo {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: var(--blanco-puro);
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    border-bottom: 1px solid var(--rosa-pastel);
+}
+
+.img-catalogo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card-custom:hover .img-catalogo {
+    transform: scale(1.05);
+}
+
+/* --- REDES SOCIALES Y LOCALES --- */
+
+.social-icon {
+    font-size: 1.45rem;
+    color: var(--gris-texto);
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+
+.social-icon.instagram:hover {
+    color: #e1306c;
+}
+
+.social-icon.facebook:hover {
+    color: #1877f2;
+}
+
+.social-icon.tiktok:hover {
+    color: #000000;
+}
+
+.link-local {
+    color: var(--morado);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.link-local:hover {
+    color: var(--dorado-metalico);
+    text-decoration: underline;
+}
