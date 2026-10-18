@@ -3,7 +3,7 @@ import { useTienda } from '../../hooks/useTienda'
 import type { Producto } from '../../types'
 import { ProductoCard } from './ProductoCard'
 
-export function Catalogo({ onSeleccionar }: { onSeleccionar: (producto: Producto) => void }) {
+export function Catalogo({ onSeleccionar }: { onSeleccionar?: (producto: Producto) => void }) {
   const { stockDe } = useTienda()
 
   return (

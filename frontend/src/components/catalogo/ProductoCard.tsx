@@ -1,3 +1,4 @@
+import { negocio } from '../../data/negocio'
 import type { Producto } from '../../types'
 import { formatearGuaranies } from '../../utils/formato'
 import { StockBadge } from './StockBadge'
@@ -5,11 +6,14 @@ import { StockBadge } from './StockBadge'
 interface Props {
   producto: Producto
   stock: number
-  onSeleccionar: (producto: Producto) => void
+  /** Si no se pasa (vista pública), el botón abre WhatsApp para consultar el producto. */
+  onSeleccionar?: (producto: Producto) => void
 }
 
 export function ProductoCard({ producto, stock, onSeleccionar }: Props) {
   const agotado = stock <= 0
+  const mensajeWhatsapp = `Hola M.L. Creaciones, quiero consultar por: ${producto.nombre}`
+  const urlWhatsapp = `https://wa.me/${negocio.whatsapp.numero}?text=${encodeURIComponent(mensajeWhatsapp)}`
 
   return (
     <div className="card h-100 card-custom">
@@ -25,14 +29,20 @@ export function ProductoCard({ producto, stock, onSeleccionar }: Props) {
         <p className="mb-3">
           Stock disponible: <StockBadge stock={stock} /> un.
         </p>
-        <button
-          type="button"
-          className="btn btn-custom w-100 mt-auto"
-          disabled={agotado}
-          onClick={() => onSeleccionar(producto)}
-        >
-          {agotado ? 'Sin stock' : 'Seleccionar para Pedido'}
-        </button>
+        {onSeleccionar ? (
+          <button
+            type="button"
+            className="btn btn-custom w-100 mt-auto"
+            disabled={agotado}
+            onClick={() => onSeleccionar(producto)}
+          >
+            {agotado ? 'Sin stock' : 'Seleccionar para Pedido'}
+          </button>
+        ) : (
+          <a href={urlWhatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-custom w-100 mt-auto">
+            <i className="bi bi-whatsapp me-1" /> Consultar
+          </a>
+        )}
       </div>
     </div>
   )

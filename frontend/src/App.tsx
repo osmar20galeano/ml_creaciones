@@ -1,39 +1,59 @@
-import { useRef, useState } from 'react'
-import { Catalogo } from './components/catalogo/Catalogo'
+import { Navigate, Outlet, Route, Routes } from 'react-router'
+import { RutaProtegida } from './components/auth/RutaProtegida'
 import { Navbar } from './components/layout/Navbar'
-import { TablaPedidos } from './components/panel/TablaPedidos'
-import { TablaPresupuestos } from './components/panel/TablaPresupuestos'
-import { FormularioPedido } from './components/pedido/FormularioPedido'
-import { useTienda } from './hooks/useTienda'
-import type { Producto } from './types'
+import { useAuth } from './hooks/useAuth'
+import { Admin } from './pages/Admin'
+import { Bienvenida } from './pages/Bienvenida'
+import { Login } from './pages/Login'
+import { Registro } from './pages/Registro'
+import { Tienda } from './pages/Tienda'
+import { Verificar } from './pages/Verificar'
 
-export default function App() {
-  const { mostrarAlerta } = useTienda()
-  const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null)
-  const formularioRef = useRef<HTMLDivElement>(null)
-
-  function seleccionarProducto(producto: Producto) {
-    setProductoSeleccionado(producto)
-    formularioRef.current?.scrollIntoView({ behavior: 'smooth' })
-    mostrarAlerta(`Seleccionaste: ${producto.nombre}. Digita el monto acordado y completa los datos.`, 'info')
-  }
-
+function Layout() {
   return (
     <>
       <Navbar />
-      <main className="container mb-5">
-        <Catalogo onSeleccionar={seleccionarProducto} />
-
-        <div className="row">
-          <div className="col-12 col-lg-4 mb-4" ref={formularioRef}>
-            <FormularioPedido producto={productoSeleccionado} onLimpiarProducto={() => setProductoSeleccionado(null)} />
-          </div>
-          <div className="col-12 col-lg-8">
-            <TablaPedidos />
-            <TablaPresupuestos />
-          </div>
-        </div>
-      </main>
+      <Outlet />
     </>
+  )
+}
+
+/** Login y registro no tienen sentido si ya hay sesión abierta. */
+function SoloInvitados() {
+  const { usuario, cargando } = useAuth()
+  if (cargando) return null
+  if (usuario) return <Navigate to={usuario.rol === 'admin' ? '/admin' : '/'} replace />
+  return <Outlet />
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Tienda />} />
+        <Route element={<SoloInvitados />}>
+          <Route path="login" element={<Login />} />
+          <Route path="registro" element={<Registro />} />
+          <Route path="verificar" element={<Verificar />} />
+        </Route>
+        <Route
+          path="bienvenida"
+          element={
+            <RutaProtegida>
+              <Bienvenida />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="admin"
+          element={
+            <RutaProtegida rol="admin">
+              <Admin />
+            </RutaProtegida>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   )
 }

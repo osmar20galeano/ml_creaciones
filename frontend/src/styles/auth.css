@@ -1,0 +1,59 @@
+/* --- LOGIN / REGISTRO / VERIFICACIÓN --- */
+
+.auth-fondo {
+    min-height: calc(100vh - 140px);
+    background: linear-gradient(135deg, var(--rosa-pastel) 0%, var(--blanco-puro) 60%, var(--rosa-medio) 100%);
+}
+
+.auth-card {
+    max-width: 440px;
+    border-top: 5px solid var(--dorado-metalico);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auth-logo {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--dorado-metalico);
+    padding: 3px;
+    background-color: var(--blanco-puro);
+}
+
+.auth-icono {
+    background-color: var(--rosa-pastel);
+    color: var(--dorado-oscuro);
+    border-color: var(--rosa-medio);
+}
+
+.auth-input {
+    border-color: var(--rosa-medio);
+}
+
+.auth-input:focus {
+    border-color: var(--dorado-metalico);
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+.codigo-casilla {
+    width: 2.9rem;
+    height: 3.4rem;
+    padding: 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--morado);
+}
+
+@media (max-width: 400px) {
+    .codigo-casilla {
+        width: 2.4rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+}
