@@ -13,7 +13,10 @@ export function Bienvenida() {
         Iniciaste sesión como <strong>{usuario.email}</strong>
       </div>
       <Link to="/" className="btn btn-custom w-100 py-2">
-        Ver el catálogo
+        <i className="bi bi-bag-heart me-1" /> Hacer un pedido
+      </Link>
+      <Link to="/mis-pedidos" className="btn btn-outline-secondary w-100 py-2 mt-2">
+        Ver mis pedidos
       </Link>
     </TarjetaAuth>
   )

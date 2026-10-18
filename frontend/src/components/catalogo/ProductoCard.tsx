@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { negocio } from '../../data/negocio'
 import type { Producto } from '../../types'
 import { formatearGuaranies } from '../../utils/formato'
@@ -5,13 +6,11 @@ import { StockBadge } from './StockBadge'
 
 interface Props {
   producto: Producto
-  stock: number
-  /** Si no se pasa (vista pública), el botón abre WhatsApp para consultar el producto. */
-  onSeleccionar?: (producto: Producto) => void
+  /** Botón principal de la tarjeta (depende de quién mira el catálogo). */
+  accion: ReactNode
 }
 
-export function ProductoCard({ producto, stock, onSeleccionar }: Props) {
-  const agotado = stock <= 0
+export function ProductoCard({ producto, accion }: Props) {
   const mensajeWhatsapp = `Hola M.L. Creaciones, quiero consultar por: ${producto.nombre}`
   const urlWhatsapp = `https://wa.me/${negocio.whatsapp.numero}?text=${encodeURIComponent(mensajeWhatsapp)}`
 
@@ -27,22 +26,15 @@ export function ProductoCard({ producto, stock, onSeleccionar }: Props) {
           {formatearGuaranies(producto.precioMin)} a {formatearGuaranies(producto.precioMax)}
         </h4>
         <p className="mb-3">
-          Stock disponible: <StockBadge stock={stock} /> un.
+          Stock disponible: <StockBadge stock={producto.stock} /> un.
         </p>
-        {onSeleccionar ? (
-          <button
-            type="button"
-            className="btn btn-custom w-100 mt-auto"
-            disabled={agotado}
-            onClick={() => onSeleccionar(producto)}
-          >
-            {agotado ? 'Sin stock' : 'Seleccionar para Pedido'}
-          </button>
-        ) : (
-          <a href={urlWhatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-custom w-100 mt-auto">
-            <i className="bi bi-whatsapp me-1" /> Consultar
+        <div className="mt-auto">
+          {accion}
+          <a href={urlWhatsapp} target="_blank" rel="noopener noreferrer" className="d-inline-block small link-local mt-2">
+            <i className="bi bi-whatsapp me-1" />
+            Consultar por WhatsApp
           </a>
-        )}
+        </div>
       </div>
     </div>
   )

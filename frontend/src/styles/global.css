@@ -154,3 +154,46 @@ body {
     color: var(--dorado-metalico);
     text-decoration: underline;
 }
+
+/* --- PROGRESO DEL PEDIDO (Mis pedidos) --- */
+
+.progreso-pedido {
+    position: relative;
+}
+
+.progreso-pedido::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background-color: var(--rosa-medio);
+}
+
+.progreso-paso {
+    position: relative;
+    flex: 1;
+    text-align: center;
+    color: var(--gris-texto);
+}
+
+.progreso-punto {
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: 0 auto 4px;
+    border-radius: 50%;
+    background-color: var(--blanco-puro);
+    border: 2px solid var(--rosa-medio);
+}
+
+.progreso-paso.hecho {
+    color: var(--morado);
+    font-weight: 600;
+}
+
+.progreso-paso.hecho .progreso-punto {
+    background-color: var(--dorado-metalico);
+    border-color: var(--dorado-metalico);
+}

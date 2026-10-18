@@ -1,40 +1,44 @@
+/** Producto tal como lo devuelve la API, más su imagen local. */
 export interface Producto {
   id: string
   nombre: string
   descripcion: string
-  imagen: string
   precioMin: number
   precioMax: number
-  stockInicial: number
+  stock: number
+  imagen: string
 }
 
 export type MetodoEntrega = 'retiro' | 'delivery'
 export type MetodoPago = 'efectivo' | 'transferencia'
+export type EstadoPedido = 'pendiente' | 'en_preparacion' | 'listo' | 'entregado' | 'cancelado'
 
-/**
- * Mantiene la forma que guardaba la versión anterior (js/app.js) en
- * localStorage, para no perder pedidos ya cargados. `productoId` es nuevo:
- * los pedidos viejos no lo tienen y por eso no pueden devolver stock.
- */
 export interface Pedido {
-  id: string
-  productoId?: string
-  cliente: string
-  producto: string
+  id: number
+  usuarioId: number | null
+  clienteNombre: string
+  productoId: string
+  productoNombre: string
   precio: number
-  modalidad: string
-  pago: string
-  fechaPedido: string
-  fechaEntrega: string
+  metodoEntrega: MetodoEntrega
+  direccion: string | null
+  metodoPago: MetodoPago
+  fechaEntrega: string // YYYY-MM-DD
   detalles: string
-  timestampEntrega: number
+  estado: EstadoPedido
+  creadoEn: string // "YYYY-MM-DD HH:MM:SS" en UTC
+  actualizadoEn: string
 }
 
 export interface Presupuesto {
-  id: string
-  cliente: string
-  producto: string
+  id: number
+  usuarioId: number | null
+  clienteNombre: string
+  productoId: string
+  productoNombre: string
   costo: number
+  detalles: string
+  creadoEn: string
 }
 
 export type TipoAlerta = 'success' | 'info' | 'warning' | 'danger'

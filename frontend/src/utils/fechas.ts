@@ -1,5 +1,3 @@
-const UN_DIA_MS = 24 * 60 * 60 * 1000
-
 /** Fecha de hoy como "YYYY-MM-DD" en hora local (toISOString usa UTC). */
 export function hoyLocalYmd(): string {
   const hoy = new Date()
@@ -8,20 +6,27 @@ export function hoyLocalYmd(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`
 }
 
-/** Convierte "YYYY-MM-DD" a la medianoche local de ese día. */
-export function ymdAFecha(ymd: string): Date {
-  return new Date(`${ymd}T00:00:00`)
+/** "2026-10-25" → "25/10/2026" */
+export function formatearYmd(ymd: string): string {
+  const [anio, mes, dia] = ymd.split('-')
+  return `${dia}/${mes}/${anio}`
 }
 
-export function formatearFecha(fecha: Date): string {
-  return fecha.toLocaleDateString('es-PY')
+/** Fecha que guarda SQLite ("YYYY-MM-DD HH:MM:SS", en UTC) mostrada en hora local. */
+export function formatearFechaHoraBd(valor: string): string {
+  const fecha = new Date(`${valor.replace(' ', 'T')}Z`)
+  return fecha.toLocaleString('es-PY', { dateStyle: 'short', timeStyle: 'short' })
 }
 
-export type EstadoEntrega = 'vencido' | 'falta-poco' | 'a-tiempo'
+export type Urgencia = 'vencido' | 'hoy' | 'manana' | 'a-tiempo'
 
-export function estadoEntrega(timestampEntrega: number): EstadoEntrega {
-  const hoy = ymdAFecha(hoyLocalYmd()).getTime()
-  if (timestampEntrega < hoy) return 'vencido'
-  if (timestampEntrega - Date.now() <= UN_DIA_MS) return 'falta-poco'
-  return 'a-tiempo'
+/** Qué tan cerca está la fecha de entrega, para destacar pedidos urgentes. */
+export function urgenciaEntrega(fechaEntrega: string): Urgencia {
+  const hoy = hoyLocalYmd()
+  if (fechaEntrega < hoy) return 'vencido'
+  if (fechaEntrega === hoy) return 'hoy'
+  const manana = new Date()
+  manana.setDate(manana.getDate() + 1)
+  const mananaYmd = `${manana.getFullYear()}-${String(manana.getMonth() + 1).padStart(2, '0')}-${String(manana.getDate()).padStart(2, '0')}`
+  return fechaEntrega === mananaYmd ? 'manana' : 'a-tiempo'
 }

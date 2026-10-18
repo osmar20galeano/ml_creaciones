@@ -26,6 +26,11 @@ export function MenuUsuario() {
         <i className="bi bi-person-check-fill text-success me-1" />
         {usuario.nombre}
       </span>
+      {usuario.rol === 'cliente' && (
+        <Link to="/mis-pedidos" className="btn btn-sm btn-outline-secondary">
+          <i className="bi bi-bag-check me-1" /> Mis pedidos
+        </Link>
+      )}
       {usuario.rol === 'admin' && (
         <Link to="/admin" className="btn btn-sm btn-outline-secondary">
           <i className="bi bi-speedometer2 me-1" /> Panel

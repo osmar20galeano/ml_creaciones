@@ -1,4 +1,7 @@
 import { useState, type FormEvent } from 'react'
+import { mensajeDeError } from '../../api/http'
+import { tiendaApi } from '../../api/tienda'
+import { useAuth } from '../../hooks/useAuth'
 import { useTienda } from '../../hooks/useTienda'
 import type { MetodoEntrega, MetodoPago, Producto } from '../../types'
 import { hoyLocalYmd } from '../../utils/fechas'
@@ -9,10 +12,15 @@ import { DatosBancarios } from './DatosBancarios'
 interface Props {
   producto: Producto | null
   onLimpiarProducto: () => void
+  /** Se llama después de guardar un pedido o presupuesto. */
+  onGuardado?: (tipo: 'pedido' | 'presupuesto') => void
 }
 
-export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
-  const { stockDe, mostrarAlerta, confirmarPedido, agregarPresupuesto } = useTienda()
+export function FormularioPedido({ producto, onLimpiarProducto, onGuardado }: Props) {
+  const { usuario } = useAuth()
+  const { mostrarAlerta, recargarProductos } = useTienda()
+  // El admin carga pedidos de cualquier cliente; el cliente pide a su nombre.
+  const esAdmin = usuario?.rol === 'admin'
 
   const [cliente, setCliente] = useState('')
   const [precio, setPrecio] = useState('')
@@ -21,6 +29,7 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
   const [direccion, setDireccion] = useState('')
   const [metodoPago, setMetodoPago] = useState<MetodoPago>('efectivo')
   const [detalles, setDetalles] = useState('')
+  const [guardando, setGuardando] = useState(false)
 
   // Al elegir otro producto del catálogo, el monto arranca en su precio mínimo.
   const [productoAnteriorId, setProductoAnteriorId] = useState<string | null>(null)
@@ -54,11 +63,11 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
     return monto
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     if (!producto) {
-      mostrarAlerta('Por favor, selecciona primero un producto del catálogo superior.', 'danger')
+      mostrarAlerta('Por favor, selecciona primero un producto del catálogo.', 'danger')
       return
     }
 
@@ -70,47 +79,69 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
       return
     }
 
-    const ok = confirmarPedido({
-      productoId: producto.id,
-      cliente: cliente.trim(),
-      precio: monto,
-      metodoEntrega,
-      direccion: direccion.trim(),
-      metodoPago,
-      fechaEntrega,
-      detalles: detalles.trim(),
-    })
-
-    if (!ok) {
-      mostrarAlerta('Se agotó el stock de este producto.', 'danger')
-      return
+    setGuardando(true)
+    try {
+      await tiendaApi.crearPedido({
+        productoId: producto.id,
+        clienteNombre: esAdmin ? cliente.trim() : undefined,
+        precio: monto,
+        metodoEntrega,
+        direccion: metodoEntrega === 'delivery' ? direccion.trim() : undefined,
+        metodoPago,
+        fechaEntrega,
+        detalles: detalles.trim(),
+      })
+      limpiarFormulario()
+      mostrarAlerta(
+        esAdmin ? 'Pedido agendado correctamente. 🚀' : '¡Pedido enviado! Te avisaremos cuando esté listo. 🚀',
+        'success',
+      )
+      onGuardado?.('pedido')
+    } catch (err) {
+      mostrarAlerta(mensajeDeError(err, 'No se pudo registrar el pedido.'), 'danger')
+    } finally {
+      // El stock pudo cambiar (por este pedido o por otro cliente).
+      void recargarProductos()
+      setGuardando(false)
     }
-
-    limpiarFormulario()
-    mostrarAlerta('¡Compra realizada con éxito! Pedido agendado correctamente. 🚀', 'success')
   }
 
-  function handlePresupuesto() {
-    if (!cliente.trim() || !producto) {
-      mostrarAlerta('Completa el nombre del cliente y el producto para cotizar.', 'warning')
+  async function handlePresupuesto() {
+    if ((esAdmin && !cliente.trim()) || !producto) {
+      mostrarAlerta(
+        esAdmin ? 'Completa el nombre del cliente y el producto para cotizar.' : 'Elige un producto para cotizar.',
+        'warning',
+      )
       return
     }
 
     const monto = validarMonto(producto, 'warning')
     if (monto === null) return
 
-    const nombreCliente = cliente.trim()
-    agregarPresupuesto({ productoId: producto.id, cliente: nombreCliente, costo: monto })
-    limpiarFormulario()
-    mostrarAlerta(`Presupuesto especial generado para ${nombreCliente} 📝`, 'success')
+    setGuardando(true)
+    try {
+      const presupuesto = await tiendaApi.crearPresupuesto({
+        productoId: producto.id,
+        clienteNombre: esAdmin ? cliente.trim() : undefined,
+        costo: monto,
+        detalles: detalles.trim(),
+      })
+      limpiarFormulario()
+      mostrarAlerta(`Presupuesto generado para ${presupuesto.clienteNombre} 📝`, 'success')
+      onGuardado?.('presupuesto')
+    } catch (err) {
+      mostrarAlerta(mensajeDeError(err, 'No se pudo generar el presupuesto.'), 'danger')
+    } finally {
+      setGuardando(false)
+    }
   }
 
-  const sinStock = producto !== null && stockDe(producto.id) <= 0
+  const sinStock = producto !== null && producto.stock <= 0
 
   return (
     <div className="card card-custom">
       <div className="card-header card-header-custom text-center">
-        <h5 className="mb-0">Procesar Pedido / Presupuesto</h5>
+        <h5 className="mb-0">{esAdmin ? 'Procesar Pedido / Presupuesto' : 'Hacer mi pedido'}</h5>
       </div>
       <div className="card-body">
         <Alerta />
@@ -122,8 +153,9 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
               type="text"
               className="form-control"
               id="cliente"
-              required
-              value={cliente}
+              required={esAdmin}
+              readOnly={!esAdmin}
+              value={esAdmin ? cliente : (usuario?.nombre ?? '')}
               onChange={(e) => setCliente(e.target.value)}
             />
           </div>
@@ -203,6 +235,7 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
                 id="direccion-envio"
                 placeholder="Ej: Centro de Caacupé..."
                 required
+                minLength={3}
                 value={direccion}
                 onChange={(e) => setDireccion(e.target.value)}
               />
@@ -230,6 +263,7 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
               className="form-control"
               id="detalles"
               rows={2}
+              maxLength={500}
               value={detalles}
               onChange={(e) => setDetalles(e.target.value)}
             />
@@ -237,13 +271,18 @@ export function FormularioPedido({ producto, onLimpiarProducto }: Props) {
 
           <div className="row g-2">
             <div className="col-6">
-              <button type="button" className="btn btn-outline-secondary w-100" onClick={handlePresupuesto}>
-                Generar Presupuesto
+              <button
+                type="button"
+                className="btn btn-outline-secondary w-100"
+                onClick={handlePresupuesto}
+                disabled={guardando}
+              >
+                {esAdmin ? 'Generar Presupuesto' : 'Pedir Presupuesto'}
               </button>
             </div>
             <div className="col-6">
-              <button type="submit" className="btn btn-custom w-100" disabled={sinStock}>
-                Comprar / Pedir
+              <button type="submit" className="btn btn-custom w-100" disabled={sinStock || guardando}>
+                {guardando ? <span className="spinner-border spinner-border-sm" /> : 'Comprar / Pedir'}
               </button>
             </div>
           </div>

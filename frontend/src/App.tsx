@@ -5,6 +5,7 @@ import { useAuth } from './hooks/useAuth'
 import { Admin } from './pages/Admin'
 import { Bienvenida } from './pages/Bienvenida'
 import { Login } from './pages/Login'
+import { MisPedidos } from './pages/MisPedidos'
 import { Registro } from './pages/Registro'
 import { Tienda } from './pages/Tienda'
 import { Verificar } from './pages/Verificar'
@@ -41,6 +42,14 @@ export default function App() {
           element={
             <RutaProtegida>
               <Bienvenida />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="mis-pedidos"
+          element={
+            <RutaProtegida rol="cliente">
+              <MisPedidos />
             </RutaProtegida>
           }
         />
