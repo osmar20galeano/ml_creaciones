@@ -233,7 +233,7 @@ export function FormularioPedido({ producto, onLimpiarProducto, onGuardado }: Pr
                 type="text"
                 className="form-control"
                 id="direccion-envio"
-                placeholder="Ej: Centro de Caacupé..."
+                placeholder="Ciudad, barrio, calle y referencias"
                 required
                 minLength={3}
                 value={direccion}

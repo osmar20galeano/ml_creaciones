@@ -32,19 +32,9 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="text-center text-lg-end">
-          <div className="mb-1">
-            <span className="text-muted small d-block d-sm-inline me-sm-2">📍 Nuestras Sedes:</span>
-            {negocio.sedes.map((sede) => (
-              <a key={sede.nombre} href={sede.mapa} target="_blank" rel="noopener noreferrer" className="link-local me-2">
-                <i className="bi bi-geo-alt-fill text-danger" /> {sede.nombre}
-              </a>
-            ))}
-          </div>
-          <a href={urlWhatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-success mt-1 shadow-sm">
-            <i className="bi bi-whatsapp" /> Enviar WhatsApp
-          </a>
-        </div>
+        <a href={urlWhatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-success shadow-sm">
+          <i className="bi bi-whatsapp" /> Enviar WhatsApp
+        </a>
 
         <MenuUsuario />
       </div>

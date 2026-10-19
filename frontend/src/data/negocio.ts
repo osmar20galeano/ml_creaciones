@@ -10,10 +10,6 @@ export const negocio = {
     // { nombre: 'Facebook', clase: 'facebook', icono: 'bi-facebook', url: 'https://www.facebook.com/...' },
     // { nombre: 'TikTok', clase: 'tiktok', icono: 'bi-tiktok', url: 'https://www.tiktok.com/@...' },
   ],
-  sedes: [
-    { nombre: 'Sede Caacupé', mapa: 'https://maps.google.com/?q=Caacupé+Centro' },
-    { nombre: 'Sede Atyrá', mapa: 'https://maps.google.com/?q=Atyrá+Centro' },
-  ],
   whatsapp: {
     numero: '595984676117', // +595 984 676117
     mensaje: 'Hola M.L. Creaciones, quiero consultar sobre un pedido',

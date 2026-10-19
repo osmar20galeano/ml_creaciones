@@ -26,7 +26,7 @@ function plantilla(contenido: string) {
       </div>
       <div style="color:#333;line-height:1.5">${contenido}</div>
     </div>
-    <p style="text-align:center;color:#9e9e9e;font-size:12px;margin-top:16px">Sedes Caacupé y Atyrá · Este es un correo automático.</p>
+    <p style="text-align:center;color:#9e9e9e;font-size:12px;margin-top:16px">Este es un correo automático.</p>
   </div>`
 }
 

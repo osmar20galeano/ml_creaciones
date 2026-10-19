@@ -85,7 +85,7 @@ const MENSAJE_ESTADO: Record<Exclude<EstadoPedido, 'pendiente'>, { asunto: strin
     titulo: '🎁 ¡Tu pedido está listo!',
     cuerpo: (p) =>
       p.metodo_entrega === 'retiro'
-        ? 'Ya puedes pasar a retirarlo por nuestro local (Caacupé o Atyrá).'
+        ? 'Ya puedes pasar a retirarlo por nuestro local.'
         : `Pronto sale hacia ${escaparHtml(p.direccion ?? 'tu dirección')}.`,
   },
   entregado: {

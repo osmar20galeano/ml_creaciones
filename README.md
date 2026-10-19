@@ -1,6 +1,6 @@
 # M.L. Creaciones & Regalos
 
-Sistema comercial (catálogo, pedidos y presupuestos) de M.L. Creaciones — sedes Caacupé y Atyrá.
+Sistema comercial (catálogo, pedidos y presupuestos) de M.L. Creaciones.
 
 ## Estructura
 
@@ -68,7 +68,7 @@ La sesión es una cookie `httpOnly` con JWT (7 días). Los códigos vencen en 15
 | Productos, precios, stock y fotos | desde el panel: **Admin → Productos** |
 | Catálogo inicial (primera vez que se crea la BD) | `backend/src/productos/catalogo.ts` |
 | Fotos incluidas de los productos iniciales | `frontend/src/data/imagenes.ts` (las que sube el admin van a `backend/data/uploads/`) |
-| Redes, sedes, WhatsApp y datos bancarios | `frontend/src/data/negocio.ts` |
+| Redes, WhatsApp y datos bancarios | `frontend/src/data/negocio.ts` |
 | Colores de la marca | `frontend/src/styles/variables.css` |
 | Estilos generales | `frontend/src/styles/global.css` |
 
