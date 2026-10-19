@@ -22,6 +22,14 @@ function Layout() {
   )
 }
 
+/** Al abrir la web sin sesión se muestra el login; el catálogo es para quien ya ingresó. */
+function Inicio() {
+  const { usuario, cargando } = useAuth()
+  if (cargando) return null
+  if (!usuario) return <Navigate to="/login" replace />
+  return <Tienda />
+}
+
 /** Login y registro no tienen sentido si ya hay sesión abierta. */
 function SoloInvitados() {
   const { usuario, cargando } = useAuth()
@@ -36,7 +44,7 @@ export default function App() {
       {/* Presentación del TP de Liderazgo: página completa, sin la barra de la tienda */}
       <Route path="canvas" element={<ModeloCanvas />} />
       <Route element={<Layout />}>
-        <Route index element={<Tienda />} />
+        <Route index element={<Inicio />} />
         <Route element={<SoloInvitados />}>
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Registro />} />
