@@ -36,6 +36,7 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 | Ruta | Quién | Qué |
 |---|---|---|
 | `/` | todos | catálogo con stock en vivo; los clientes con sesión hacen su pedido acá |
+| `/canvas` | todos | presentación del TP: Modelo de Negocio Canvas (ver `docs/TP_Canvas_consigna.md`) |
 | `/registro` → `/verificar` | visitantes | crear cuenta: llega un código de 6 dígitos al Gmail |
 | `/login` | visitantes | iniciar sesión |
 | `/recuperar` | visitantes | olvidé mi contraseña: código por correo + contraseña nueva |

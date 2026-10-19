@@ -78,6 +78,15 @@ export function Login() {
       <p className="text-center small mt-4 mb-0">
         ¿No tienes cuenta? <Link to="/registro" className="link-local">Regístrate aquí</Link>
       </p>
+
+      <Link to="/canvas" className="enlace-canvas mt-4">
+        <i className="bi bi-grid-3x3-gap" />
+        <span>
+          <strong>Conoce el proyecto</strong>
+          <small>Modelo de Negocio Canvas de M.L. Creaciones</small>
+        </span>
+        <i className="bi bi-arrow-right ms-auto" />
+      </Link>
     </TarjetaAuth>
   )
 }

@@ -57,3 +57,38 @@
         font-size: 1.25rem;
     }
 }
+
+/* Acceso a la presentación del TP (Modelo Canvas) */
+.enlace-canvas {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(135deg, #2a0b3d, var(--morado));
+    box-shadow: 0 6px 18px rgba(74, 20, 140, 0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.enlace-canvas:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(74, 20, 140, 0.35);
+}
+
+.enlace-canvas > i:first-child {
+    font-size: 1.5rem;
+    color: var(--dorado-metalico);
+}
+
+.enlace-canvas span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.enlace-canvas small {
+    color: rgba(255, 255, 255, 0.75);
+}

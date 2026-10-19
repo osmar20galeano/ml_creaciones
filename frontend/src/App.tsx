@@ -7,6 +7,7 @@ import { AdminProductos } from './pages/AdminProductos'
 import { Bienvenida } from './pages/Bienvenida'
 import { Login } from './pages/Login'
 import { MisPedidos } from './pages/MisPedidos'
+import { ModeloCanvas } from './pages/ModeloCanvas'
 import { Recuperar } from './pages/Recuperar'
 import { Registro } from './pages/Registro'
 import { Tienda } from './pages/Tienda'
@@ -32,6 +33,8 @@ function SoloInvitados() {
 export default function App() {
   return (
     <Routes>
+      {/* Presentación del TP de Liderazgo: página completa, sin la barra de la tienda */}
+      <Route path="canvas" element={<ModeloCanvas />} />
       <Route element={<Layout />}>
         <Route index element={<Tienda />} />
         <Route element={<SoloInvitados />}>
