@@ -1,0 +1,17 @@
+[Unit]
+Description=M.L. Creaciones (API + web)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=osmar
+Group=osmar
+Environment=HOME=/home/osmar
+Environment=NODE_ENV=production
+ExecStart=/home/osmar/ml_creaciones/deploy/iniciar-api.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
