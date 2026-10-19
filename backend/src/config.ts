@@ -13,7 +13,7 @@ const esquema = z.object({
   NOTIFICAR_A: z.email().optional(),
   // "consola" imprime los correos en la terminal en vez de enviarlos (útil para desarrollo).
   MAIL_MODO: z.enum(['gmail', 'consola']).default('gmail'),
-  WHATSAPP_NUMERO: z.string().regex(/^\d+$/).default('595981000000'),
+  WHATSAPP_NUMERO: z.string().regex(/^\d+$/).default('595984676117'),
 })
 
 const resultado = esquema.safeParse(process.env)
