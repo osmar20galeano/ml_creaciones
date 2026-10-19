@@ -19,7 +19,10 @@ npm run instalar                      # instala raíz, backend y frontend
 cp backend/.env.example backend/.env  # y completar los valores (ver abajo)
 npm run seed                          # crea la cuenta de administrador
 npm run dev                           # API en :3000 + web en http://localhost:5173
+npm run publicar:canvas               # publica la página del Canvas en GitHub Pages
 ```
+
+**Modelo Canvas publicado:** https://osmar20galeano.github.io/ml_creaciones/
 
 ### backend/.env
 

@@ -4,7 +4,8 @@
   "scripts": {
     "instalar": "npm install && npm install --prefix backend && npm install --prefix frontend",
     "dev": "concurrently -n api,web -c magenta,yellow \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "seed": "npm run seed --prefix backend"
+    "seed": "npm run seed --prefix backend",
+    "publicar:canvas": "bash scripts/publicar-canvas.sh"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"

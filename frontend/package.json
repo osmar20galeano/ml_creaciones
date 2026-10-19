@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:canvas": "vite build -c vite.canvas.config.ts && mv dist-canvas/canvas.html dist-canvas/index.html"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",

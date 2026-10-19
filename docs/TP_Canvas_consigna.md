@@ -40,6 +40,12 @@ Aplicar el **Business Model Canvas** de Alexander Osterwalder a una idea de nego
 
 Exposición: 10 a 12 minutos más 3 de preguntas, con soporte visual.
 
+## Dónde verlo
+
+- **En internet (para la profe):** https://osmar20galeano.github.io/ml_creaciones/
+- **En la compu del equipo:** `npm run dev` y luego http://localhost:5173/login → "Conoce el proyecto"
+- Para actualizar la versión de internet después de cambiar textos: `npm run publicar:canvas`
+
 ## Cómo lo cubre la página `/canvas`
 
 | Requisito | Sección de la página |

@@ -9,11 +9,17 @@ Sistema web de una tienda de regalos personalizados. Es, a la vez, el proyecto d
 
 El equipo expone desde su computadora. Recorrido para la presentación: `http://localhost:5173/login` → botón **"Conoce el proyecto"** → `/canvas` → **"Volver al inicio"**.
 
+**Versión pública del Canvas (sin login ni backend):** https://osmar20galeano.github.io/ml_creaciones/
+- Se sirve desde la rama `gh-pages`, que se genera con `npm run publicar:canvas` (script `scripts/publicar-canvas.sh`). **No editar `gh-pages` a mano.**
+- Compila `frontend/canvas.html` + `src/main-canvas.tsx` con `vite.canvas.config.ts` (`VITE_SOLO_CANVAS=true`: "Volver al inicio" sube al principio y el link a la tienda lleva al repositorio).
+- Después de cambiar `src/data/canvas.ts`, volver a correr `npm run publicar:canvas` para actualizar la web pública.
+
 ## Cómo correrlo
 
 ```bash
 npm run dev          # desde la raíz: API (:3000) + web (http://localhost:5173)
 npm run seed         # crea/actualiza el admin desde backend/.env
+npm run publicar:canvas  # publica la página del Canvas en GitHub Pages
 ```
 
 - La web funciona **solo en local** (decisión del equipo; publicarla requiere un servidor pago o adaptaciones).

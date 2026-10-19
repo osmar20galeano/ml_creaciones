@@ -34,7 +34,21 @@ const ordenados = [...bloques].sort((a, b) => a.numero - b.numero)
 
 const irA = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
+/**
+ * En la versión publicada en GitHub Pages no hay backend ni login:
+ * "Volver al inicio" sube al principio y la tienda se reemplaza por el repositorio.
+ */
+const SOLO_CANVAS = import.meta.env.VITE_SOLO_CANVAS === 'true'
+const URL_REPOSITORIO = 'https://github.com/osmar20galeano/ml_creaciones'
+
 function VolverInicio({ className = '' }: { className?: string }) {
+  if (SOLO_CANVAS) {
+    return (
+      <button type="button" className={`btn btn-custom ${className}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <i className="bi bi-house-door me-1" /> Volver al inicio
+      </button>
+    )
+  }
   return (
     <Link to="/login" className={`btn btn-custom ${className}`}>
       <i className="bi bi-house-door me-1" /> Volver al inicio
@@ -326,9 +340,15 @@ export function ModeloCanvas() {
                 })}
               </div>
               <div className="text-center mt-4">
-                <Link to="/" className="btn btn-outline-light">
-                  <i className="bi bi-shop me-1" /> Ver la tienda funcionando
-                </Link>
+                {SOLO_CANVAS ? (
+                  <a href={URL_REPOSITORIO} target="_blank" rel="noopener noreferrer" className="btn btn-outline-light">
+                    <i className="bi bi-github me-1" /> Ver el código del sistema
+                  </a>
+                ) : (
+                  <Link to="/" className="btn btn-outline-light">
+                    <i className="bi bi-shop me-1" /> Ver la tienda funcionando
+                  </Link>
+                )}
               </div>
             </Aparecer>
           </div>
