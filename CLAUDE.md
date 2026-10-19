@@ -22,8 +22,19 @@ npm run seed         # crea/actualiza el admin desde backend/.env
 npm run publicar:canvas  # publica la página del Canvas en GitHub Pages
 ```
 
-- La web funciona **solo en local** (decisión del equipo; publicarla requiere un servidor pago o adaptaciones).
+- **Producción:** https://srv2071565.hstgr.cloud (VPS Hostinger del usuario, Ubuntu 26.04). Ver "Servidor" abajo.
+- En local (`npm run dev`) es el entorno de desarrollo: su base de datos ya **no** es la real.
 - `backend/.env` (clave de Gmail, admin) y `backend/data/` (base SQLite y fotos) **no van a git**. El repo es público.
+
+## Servidor (VPS)
+
+- Acceso: `ssh -i ~/.ssh/id_ed25519_vps osmar@2.24.204.122`. El usuario `osmar` tiene `sudo` **con contraseña**: los pasos con sudo los ejecuta el usuario en su terminal.
+- Proyecto en `~/ml_creaciones` (rama `canvas`), con Node 24 vía nvm **solo para este proyecto**. El Node 22 del sistema lo usa Hermes Agent y otros proyectos del usuario: **no tocarlos**.
+- Servicio systemd `ml-creaciones` (`deploy/ml-creaciones.service`): el backend en 127.0.0.1:3000 entrega la API y `frontend/dist`. Nginx hace de proxy, con HTTPS de Let's Encrypt (renovación automática).
+- **Actualizar** después de hacer push: `ssh … 'bash ~/ml_creaciones/deploy/actualizar.sh'`. No pide contraseña: sudoers permite solo `systemctl restart ml-creaciones`.
+- Registros: `journalctl -u ml-creaciones -n 50` (sin sudo).
+- Respaldo diario a las 3:30 (cron del usuario) en `~/respaldos/ml_creaciones` (14 días).
+- `backend/.env` del VPS es propio (JWT_SECRET distinto, `NODE_ENV=production`, FRONTEND_URL con el dominio). Nunca sobrescribirlo con el local.
 
 ## Estructura
 

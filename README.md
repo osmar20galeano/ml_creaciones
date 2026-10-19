@@ -24,6 +24,18 @@ npm run publicar:canvas               # publica la página del Canvas en GitHub 
 
 **Modelo Canvas publicado:** https://osmar20galeano.github.io/ml_creaciones/
 
+## Producción (VPS)
+
+La tienda completa funciona en **https://srv2071565.hstgr.cloud** (Ubuntu + Nginx + HTTPS de Let's Encrypt).
+
+| Archivo | Para qué |
+|---|---|
+| `deploy/instalar-sistema.sh` | Instalación inicial con sudo: Nginx, Certbot, servicio y certificado |
+| `deploy/ml-creaciones.service` | Servicio systemd que mantiene la tienda encendida |
+| `deploy/nginx-ml-creaciones.conf` | Nginx como proxy hacia el backend (127.0.0.1:3000) |
+| `deploy/actualizar.sh` | Baja los cambios de GitHub, compila y reinicia (sin contraseña) |
+| `deploy/respaldo.sh` | Copia diaria de la base de datos y las fotos (últimos 14 días) |
+
 ### backend/.env
 
 | Variable | Qué es |
