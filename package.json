@@ -1,0 +1,12 @@
+{
+  "name": "ml-creaciones",
+  "private": true,
+  "scripts": {
+    "instalar": "npm install && npm install --prefix backend && npm install --prefix frontend",
+    "dev": "concurrently -n api,web -c magenta,yellow \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "seed": "npm run seed --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
