@@ -7,6 +7,8 @@ export type Rol = 'admin' | 'cliente'
 export interface SesionPayload {
   sub: string
   rol: Rol
+  /** usuarios.sesion_version al crear la sesión; si cambió (nueva contraseña), la sesión ya no vale. */
+  v: number
 }
 
 export const COOKIE_SESION = 'ml_sesion'
@@ -32,7 +34,8 @@ export function leerSesion(token: string | undefined): SesionPayload | null {
   try {
     const datos = jwt.verify(token, config.JWT_SECRET)
     if (typeof datos === 'string' || !datos.sub) return null
-    return { sub: datos.sub, rol: datos.rol as Rol }
+    // Las sesiones creadas antes de existir `v` cuentan como versión 0.
+    return { sub: datos.sub, rol: datos.rol as Rol, v: typeof datos.v === 'number' ? datos.v : 0 }
   } catch {
     return null
   }

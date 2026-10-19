@@ -1,13 +1,19 @@
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { TarjetaAuth } from '../components/auth/TarjetaAuth'
 import { useAuth } from '../hooks/useAuth'
 
 export function Bienvenida() {
   const { usuario } = useAuth()
+  const location = useLocation()
+  // Desde "Olvidé mi contraseña" llega otro mensaje en lugar del de cuenta confirmada.
+  const mensaje = (location.state as { mensaje?: string } | null)?.mensaje
   if (!usuario) return null
 
   return (
-    <TarjetaAuth titulo={`¡Hola, ${usuario.nombre}! ✨`} subtitulo="Tu cuenta está confirmada y funciona correctamente.">
+    <TarjetaAuth
+      titulo={`¡Hola, ${usuario.nombre}! ✨`}
+      subtitulo={mensaje ?? 'Tu cuenta está confirmada y funciona correctamente.'}
+    >
       <div className="alert alert-light border-gold text-center small">
         <i className="bi bi-patch-check-fill text-success me-1" />
         Iniciaste sesión como <strong>{usuario.email}</strong>

@@ -55,6 +55,10 @@ export async function enviarCorreo({ para, asunto, html, texto, responderA }: Co
   })
 }
 
+function bloqueCodigo(codigo: string) {
+  return `<div style="font-size:34px;letter-spacing:10px;font-weight:bold;color:#4a148c;background:#fce4ec;border-radius:8px;padding:14px;margin:18px 0;text-align:center">${codigo}</div>`
+}
+
 export async function enviarCodigoVerificacion(destino: string, nombre: string, codigo: string) {
   await enviarCorreo({
     para: destino,
@@ -62,7 +66,35 @@ export async function enviarCodigoVerificacion(destino: string, nombre: string, 
     texto: `Hola ${nombre}, tu código para confirmar tu cuenta es ${codigo}. Vence en 15 minutos.`,
     html: `
       <p style="text-align:center">¡Hola, <strong>${escaparHtml(nombre)}</strong>! Este es tu código para confirmar tu cuenta:</p>
-      <div style="font-size:34px;letter-spacing:10px;font-weight:bold;color:#4a148c;background:#fce4ec;border-radius:8px;padding:14px;margin:18px 0;text-align:center">${codigo}</div>
+      ${bloqueCodigo(codigo)}
       <p style="color:#757575;font-size:13px;text-align:center">El código vence en 15 minutos. Si no creaste una cuenta, ignora este correo.</p>`,
+  })
+}
+
+export async function enviarCodigoRecuperacion(destino: string, nombre: string, codigo: string) {
+  await enviarCorreo({
+    para: destino,
+    asunto: `${codigo} es tu código para restablecer la contraseña`,
+    texto: `Hola ${nombre}, tu código para restablecer la contraseña es ${codigo}. Vence en 15 minutos. Si no lo pediste, ignora este correo: tu contraseña no cambia.`,
+    html: `
+      <p style="text-align:center">¡Hola, <strong>${escaparHtml(nombre)}</strong>! Pediste restablecer tu contraseña. Este es tu código:</p>
+      ${bloqueCodigo(codigo)}
+      <p style="color:#757575;font-size:13px;text-align:center">El código vence en 15 minutos.<br>
+      Si no lo pediste tú, ignora este correo: tu contraseña sigue siendo la misma.</p>`,
+  })
+}
+
+export async function avisarCambioPassword(destino: string, nombre: string) {
+  const cuando = new Date().toLocaleString('es-PY', { dateStyle: 'long', timeStyle: 'short' })
+  await enviarCorreo({
+    para: destino,
+    asunto: '🔒 Tu contraseña fue cambiada',
+    texto: `Hola ${nombre}, la contraseña de tu cuenta de M.L. Creaciones se cambió el ${cuando}. Si no fuiste tú, escríbenos por WhatsApp cuanto antes (${config.WHATSAPP_NUMERO}).`,
+    html: `
+      <p>¡Hola, <strong>${escaparHtml(nombre)}</strong>!</p>
+      <p>La contraseña de tu cuenta se cambió el <strong>${cuando}</strong>. Por seguridad, cerramos las sesiones abiertas en otros dispositivos.</p>
+      <p style="background:#fff8e1;border-left:4px solid #d4af37;padding:10px 12px;font-size:14px">
+        ¿No fuiste tú? Escríbenos por <a href="https://wa.me/${config.WHATSAPP_NUMERO}" style="color:#4a148c">WhatsApp</a> cuanto antes.
+      </p>`,
   })
 }

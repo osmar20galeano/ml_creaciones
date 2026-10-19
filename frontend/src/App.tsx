@@ -6,6 +6,7 @@ import { Admin } from './pages/Admin'
 import { Bienvenida } from './pages/Bienvenida'
 import { Login } from './pages/Login'
 import { MisPedidos } from './pages/MisPedidos'
+import { Recuperar } from './pages/Recuperar'
 import { Registro } from './pages/Registro'
 import { Tienda } from './pages/Tienda'
 import { Verificar } from './pages/Verificar'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Registro />} />
           <Route path="verificar" element={<Verificar />} />
+          <Route path="recuperar" element={<Recuperar />} />
         </Route>
         <Route
           path="bienvenida"

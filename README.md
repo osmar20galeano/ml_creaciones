@@ -38,6 +38,7 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 | `/` | todos | catálogo con stock en vivo; los clientes con sesión hacen su pedido acá |
 | `/registro` → `/verificar` | visitantes | crear cuenta: llega un código de 6 dígitos al Gmail |
 | `/login` | visitantes | iniciar sesión |
+| `/recuperar` | visitantes | olvidé mi contraseña: código por correo + contraseña nueva |
 | `/bienvenida` | clientes | saludo de cuenta confirmada |
 | `/mis-pedidos` | clientes | sus pedidos con el estado (recibido → preparando → listo → entregado) y presupuestos |
 | `/admin` | administrador | agenda de pedidos con filtros y cambio de estado, presupuestos, carga de pedidos en el local |
@@ -47,6 +48,7 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 | Ruta | Quién | Qué |
 |---|---|---|
 | `POST /api/auth/registro` · `verificar` · `reenviar-codigo` · `login` · `logout`, `GET /api/auth/yo` | todos | cuenta y sesión |
+| `POST /api/auth/olvide` · `restablecer` | todos | recuperar contraseña (no revela si el correo existe; cambiarla cierra las otras sesiones) |
 | `GET /api/productos` | todos | catálogo con stock |
 | `POST /api/pedidos` | con sesión | crear pedido (descuenta stock) |
 | `GET /api/pedidos/mios` · `POST /api/pedidos/:id/cancelar` | cliente | sus pedidos; cancelar mientras esté pendiente |

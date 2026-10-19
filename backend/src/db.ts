@@ -32,6 +32,15 @@ db.exec(`
     creado_en   INTEGER NOT NULL  -- epoch ms
   );
 
+  CREATE TABLE IF NOT EXISTS codigos_recuperacion (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id  INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    codigo_hash TEXT    NOT NULL,
+    expira_en   INTEGER NOT NULL, -- epoch ms
+    intentos    INTEGER NOT NULL DEFAULT 0,
+    creado_en   INTEGER NOT NULL  -- epoch ms
+  );
+
   CREATE TABLE IF NOT EXISTS productos (
     id          TEXT    PRIMARY KEY,
     nombre      TEXT    NOT NULL,
@@ -74,6 +83,18 @@ db.exec(`
   );
 `)
 
+// --- Migraciones sobre tablas que ya existían ---
+
+function tieneColumna(tabla: string, columna: string) {
+  const columnas = db.prepare(`PRAGMA table_info(${tabla})`).all() as { name: string }[]
+  return columnas.some((c) => c.name === columna)
+}
+
+// Se incrementa al cambiar la contraseña: invalida las sesiones abiertas en otros dispositivos.
+if (!tieneColumna('usuarios', 'sesion_version')) {
+  db.exec('ALTER TABLE usuarios ADD COLUMN sesion_version INTEGER NOT NULL DEFAULT 0')
+}
+
 const insertarProductoInicial = db.prepare(
   `INSERT OR IGNORE INTO productos (id, nombre, descripcion, precio_min, precio_max, stock)
    VALUES (?, ?, ?, ?, ?, ?)`,
@@ -102,6 +123,7 @@ export interface Usuario {
   password_hash: string
   rol: Rol
   verificado: number
+  sesion_version: number
   creado_en: string
 }
 

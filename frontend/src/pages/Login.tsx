@@ -64,6 +64,11 @@ export function Login() {
           value={password}
           onChange={setPassword}
         />
+        <div className="text-end mt-n2 mb-3">
+          <Link to="/recuperar" state={{ email: email.trim() }} className="small link-local">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </div>
 
         <button type="submit" className="btn btn-custom w-100 py-2 mt-2" disabled={enviando}>
           {enviando ? <span className="spinner-border spinner-border-sm" /> : 'Ingresar'}

@@ -34,14 +34,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authApi.reenviarCodigo(email)
   }, [])
 
+  const solicitarRecuperacion = useCallback(async (email: string) => {
+    await authApi.olvide(email)
+  }, [])
+
+  const restablecerPassword = useCallback(
+    async (email: string, codigo: string, password: string, confirmarPassword: string) => {
+      const u = await authApi.restablecer({ email, codigo, password, confirmarPassword })
+      setUsuario(u)
+      return u
+    },
+    [],
+  )
+
   const logout = useCallback(async () => {
     await authApi.logout().catch(() => undefined)
     setUsuario(null)
   }, [])
 
   const valor = useMemo<AuthContextValue>(
-    () => ({ usuario, cargando, login, registrar, verificar, reenviarCodigo, logout }),
-    [usuario, cargando, login, registrar, verificar, reenviarCodigo, logout],
+    () => ({
+      usuario,
+      cargando,
+      login,
+      registrar,
+      verificar,
+      reenviarCodigo,
+      solicitarRecuperacion,
+      restablecerPassword,
+      logout,
+    }),
+    [usuario, cargando, login, registrar, verificar, reenviarCodigo, solicitarRecuperacion, restablecerPassword, logout],
   )
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>

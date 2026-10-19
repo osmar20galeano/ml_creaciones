@@ -1,10 +1,14 @@
-import { Router } from 'express'
+import { Router, type Response } from 'express'
 import { rateLimit } from 'express-rate-limit'
-import { usuarioPublico } from '../db.js'
+import { usuarioPublico, type Usuario } from '../db.js'
 import { requireAuth } from '../middleware/requireAuth.js'
 import * as auth from './auth.service.js'
-import { emailSchema, loginSchema, registroSchema, verificarSchema } from './schemas.js'
+import { emailSchema, loginSchema, registroSchema, restablecerSchema, verificarSchema } from './schemas.js'
 import { cerrarSesion, crearSesion } from './tokens.js'
+
+function iniciarSesion(res: Response, usuario: Usuario) {
+  crearSesion(res, { sub: String(usuario.id), rol: usuario.rol, v: usuario.sesion_version })
+}
 
 const limitador = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -25,7 +29,7 @@ authRouter.post('/registro', limitador, async (req, res) => {
 authRouter.post('/verificar', limitador, (req, res) => {
   const { email, codigo } = verificarSchema.parse(req.body)
   const usuario = auth.verificar(email, codigo)
-  crearSesion(res, { sub: String(usuario.id), rol: usuario.rol })
+  iniciarSesion(res, usuario)
   res.json({ usuario: usuarioPublico(usuario) })
 })
 
@@ -38,7 +42,21 @@ authRouter.post('/reenviar-codigo', limitador, async (req, res) => {
 authRouter.post('/login', limitador, async (req, res) => {
   const { email, password } = loginSchema.parse(req.body)
   const usuario = await auth.login(email, password)
-  crearSesion(res, { sub: String(usuario.id), rol: usuario.rol })
+  iniciarSesion(res, usuario)
+  res.json({ usuario: usuarioPublico(usuario) })
+})
+
+authRouter.post('/olvide', limitador, async (req, res) => {
+  const { email } = emailSchema.parse(req.body)
+  await auth.solicitarRecuperacion(email)
+  // Misma respuesta exista o no la cuenta.
+  res.json({ ok: true })
+})
+
+authRouter.post('/restablecer', limitador, async (req, res) => {
+  const { email, codigo, password } = restablecerSchema.parse(req.body)
+  const usuario = await auth.restablecerPassword(email, codigo, password)
+  iniciarSesion(res, usuario)
   res.json({ usuario: usuarioPublico(usuario) })
 })
 
