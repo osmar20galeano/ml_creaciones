@@ -15,8 +15,7 @@ export const negocio = {
     mensaje: 'Hola M.L. Creaciones, quiero consultar sobre un pedido',
   },
   banco: {
-    nombre: 'Visión Banco',
-    cuenta: '14529840',
-    titular: 'M.L. Creaciones',
+    nombre: 'Ueno Bank',
+    alias: '6547001',
   },
 } as const
