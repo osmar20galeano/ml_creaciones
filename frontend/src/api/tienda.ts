@@ -1,5 +1,14 @@
 import { imagenDe } from '../data/imagenes'
-import type { EstadoPedido, MetodoEntrega, MetodoPago, Pedido, Presupuesto, Producto } from '../types'
+import type {
+  DatosProducto,
+  EstadoPedido,
+  MetodoEntrega,
+  MetodoPago,
+  Pedido,
+  Presupuesto,
+  Producto,
+  ProductoApi,
+} from '../types'
 import { pedir } from './http'
 
 export interface NuevoPedido {
@@ -27,11 +36,28 @@ function query(filtro: FiltroPedidos) {
   return filtro === 'todos' ? '' : `?estado=${filtro}`
 }
 
+function conImagen(p: ProductoApi): Producto {
+  return { ...p, imagen: p.imagenUrl ?? imagenDe(p.id) }
+}
+
+type RespuestaProducto = Promise<{ producto: ProductoApi }>
+const producto = (r: RespuestaProducto) => r.then((d) => conImagen(d.producto))
+
 export const tiendaApi = {
-  productos: () =>
-    pedir<{ productos: Omit<Producto, 'imagen'>[] }>('/productos').then((d) =>
-      d.productos.map((p) => ({ ...p, imagen: imagenDe(p.id) })),
-    ),
+  productos: () => pedir<{ productos: ProductoApi[] }>('/productos').then((d) => d.productos.map(conImagen)),
+
+  // Productos (solo admin)
+  todosLosProductos: () =>
+    pedir<{ productos: ProductoApi[] }>('/productos/todos').then((d) => d.productos.map(conImagen)),
+  crearProducto: (datos: DatosProducto) => producto(pedir('/productos', 'POST', datos)),
+  editarProducto: (id: string, cambios: Partial<DatosProducto>) => producto(pedir(`/productos/${id}`, 'PATCH', cambios)),
+  ajustarStock: (id: string, cambio: number) => producto(pedir(`/productos/${id}/stock`, 'POST', { cambio })),
+  subirImagen: (id: string, archivo: File) => {
+    const datos = new FormData()
+    datos.append('imagen', archivo)
+    return producto(pedir(`/productos/${id}/imagen`, 'PUT', datos))
+  },
+  quitarImagen: (id: string) => producto(pedir(`/productos/${id}/imagen`, 'DELETE')),
 
   crearPedido: (datos: NuevoPedido) => pedir<{ pedido: Pedido }>('/pedidos', 'POST', datos).then((d) => d.pedido),
   misPedidos: () => pedir<{ pedidos: Pedido[] }>('/pedidos/mios').then((d) => d.pedidos),

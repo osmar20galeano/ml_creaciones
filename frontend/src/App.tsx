@@ -3,6 +3,7 @@ import { RutaProtegida } from './components/auth/RutaProtegida'
 import { Navbar } from './components/layout/Navbar'
 import { useAuth } from './hooks/useAuth'
 import { Admin } from './pages/Admin'
+import { AdminProductos } from './pages/AdminProductos'
 import { Bienvenida } from './pages/Bienvenida'
 import { Login } from './pages/Login'
 import { MisPedidos } from './pages/MisPedidos'
@@ -60,6 +61,14 @@ export default function App() {
           element={
             <RutaProtegida rol="admin">
               <Admin />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="admin/productos"
+          element={
+            <RutaProtegida rol="admin">
+              <AdminProductos />
             </RutaProtegida>
           }
         />

@@ -197,3 +197,44 @@ body {
     background-color: var(--dorado-metalico);
     border-color: var(--dorado-metalico);
 }
+
+/* --- PANEL ADMIN --- */
+
+.admin-nav .nav-link {
+    color: var(--morado);
+    font-weight: 600;
+}
+
+.admin-nav .nav-link.active {
+    background-color: var(--dorado-metalico);
+    color: var(--blanco-puro);
+}
+
+.miniatura-producto {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--rosa-medio);
+}
+
+.producto-oculto {
+    opacity: 0.6;
+}
+
+.foto-producto {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px dashed var(--rosa-medio);
+    border-radius: 10px;
+    background-color: var(--gris-fondo);
+}
+
+.foto-producto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

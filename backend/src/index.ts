@@ -3,7 +3,9 @@ import express from 'express'
 import { authRouter } from './auth/auth.routes.js'
 import { config } from './config.js'
 import { manejadorErrores } from './errores.js'
-import { pedidosRouter, presupuestosRouter, productosRouter } from './pedidos/pedidos.routes.js'
+import { pedidosRouter, presupuestosRouter } from './pedidos/pedidos.routes.js'
+import { productosRouter } from './productos/productos.routes.js'
+import { CARPETA_IMAGENES } from './productos/imagenes.js'
 
 const app = express()
 
@@ -17,6 +19,8 @@ app.get('/api/salud', (_req, res) => {
 })
 app.use('/api/auth', authRouter)
 app.use('/api/productos', productosRouter)
+// Fotos subidas por el admin. Los nombres llevan un sufijo aleatorio, así que se pueden cachear mucho tiempo.
+app.use('/api/uploads/productos', express.static(CARPETA_IMAGENES, { maxAge: '30d', immutable: true, index: false }))
 app.use('/api/pedidos', pedidosRouter)
 app.use('/api/presupuestos', presupuestosRouter)
 

@@ -95,6 +95,11 @@ if (!tieneColumna('usuarios', 'sesion_version')) {
   db.exec('ALTER TABLE usuarios ADD COLUMN sesion_version INTEGER NOT NULL DEFAULT 0')
 }
 
+// Nombre del archivo de la foto subida por el admin (NULL: usa la imagen incluida en el frontend).
+if (!tieneColumna('productos', 'imagen')) {
+  db.exec('ALTER TABLE productos ADD COLUMN imagen TEXT')
+}
+
 const insertarProductoInicial = db.prepare(
   `INSERT OR IGNORE INTO productos (id, nombre, descripcion, precio_min, precio_max, stock)
    VALUES (?, ?, ?, ?, ?, ?)`,
@@ -144,6 +149,7 @@ export interface ProductoFila {
   precio_max: number
   stock: number
   activo: number
+  imagen: string | null
 }
 
 export type EstadoPedido = 'pendiente' | 'en_preparacion' | 'listo' | 'entregado' | 'cancelado'

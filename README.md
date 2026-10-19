@@ -29,7 +29,7 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 | `GMAIL_USER` / `GMAIL_APP_PASSWORD` | Gmail que envía los códigos y su [contraseña de aplicación](https://myaccount.google.com/apppasswords) |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | cuenta de administrador que crea `npm run seed` |
 
-`backend/.env` y la base de datos (`backend/data/`) **no se suben a git**.
+`backend/.env` y `backend/data/` (base de datos y fotos subidas) **no se suben a git**. Para hacer una copia de seguridad, copia esa carpeta.
 
 ## Módulos y rutas
 
@@ -42,6 +42,7 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 | `/bienvenida` | clientes | saludo de cuenta confirmada |
 | `/mis-pedidos` | clientes | sus pedidos con el estado (recibido → preparando → listo → entregado) y presupuestos |
 | `/admin` | administrador | agenda de pedidos con filtros y cambio de estado, presupuestos, carga de pedidos en el local |
+| `/admin/productos` | administrador | crear y editar productos, precios, stock (+/−), foto y ocultar/mostrar |
 
 ### API
 
@@ -49,7 +50,9 @@ npm run dev                           # API en :3000 + web en http://localhost:5
 |---|---|---|
 | `POST /api/auth/registro` · `verificar` · `reenviar-codigo` · `login` · `logout`, `GET /api/auth/yo` | todos | cuenta y sesión |
 | `POST /api/auth/olvide` · `restablecer` | todos | recuperar contraseña (no revela si el correo existe; cambiarla cierra las otras sesiones) |
-| `GET /api/productos` | todos | catálogo con stock |
+| `GET /api/productos` | todos | catálogo con stock (solo productos visibles) |
+| `GET /api/productos/todos` · `POST /api/productos` · `PATCH /api/productos/:id` · `POST /api/productos/:id/stock` | admin | gestionar productos |
+| `PUT` / `DELETE /api/productos/:id/imagen` | admin | subir (JPG/PNG/WebP, máx. 5 MB) o quitar la foto |
 | `POST /api/pedidos` | con sesión | crear pedido (descuenta stock) |
 | `GET /api/pedidos/mios` · `POST /api/pedidos/:id/cancelar` | cliente | sus pedidos; cancelar mientras esté pendiente |
 | `GET /api/pedidos?estado=activos` · `PATCH /api/pedidos/:id/estado` | admin | agenda y cambio de estado (cancelar devuelve stock) |
@@ -62,8 +65,9 @@ La sesión es una cookie `httpOnly` con JWT (7 días). Los códigos vencen en 15
 
 | Qué | Archivo |
 |---|---|
-| Catálogo inicial (nombre, precios, stock) | `backend/src/productos/catalogo.ts` — se carga en la BD solo si el producto no existe |
-| Imagen de cada producto | `frontend/src/data/imagenes.ts` |
+| Productos, precios, stock y fotos | desde el panel: **Admin → Productos** |
+| Catálogo inicial (primera vez que se crea la BD) | `backend/src/productos/catalogo.ts` |
+| Fotos incluidas de los productos iniciales | `frontend/src/data/imagenes.ts` (las que sube el admin van a `backend/data/uploads/`) |
 | Redes, sedes, WhatsApp y datos bancarios | `frontend/src/data/negocio.ts` |
 | Colores de la marca | `frontend/src/styles/variables.css` |
 | Estilos generales | `frontend/src/styles/global.css` |

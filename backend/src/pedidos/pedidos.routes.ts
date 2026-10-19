@@ -9,12 +9,6 @@ import {
 } from './pedidos.schemas.js'
 import * as servicio from './pedidos.service.js'
 
-export const productosRouter = Router()
-
-productosRouter.get('/', (_req, res) => {
-  res.json({ productos: servicio.listarProductos() })
-})
-
 export const pedidosRouter = Router()
 
 pedidosRouter.post('/', requireAuth, (req, res) => {

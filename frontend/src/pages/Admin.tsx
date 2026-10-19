@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { mensajeDeError } from '../api/http'
 import { tiendaApi, type FiltroPedidos } from '../api/tienda'
+import { AdminNav } from '../components/admin/AdminNav'
 import { Catalogo } from '../components/catalogo/Catalogo'
 import { TablaPedidos } from '../components/panel/TablaPedidos'
 import { TablaPresupuestos } from '../components/panel/TablaPresupuestos'
@@ -52,6 +53,7 @@ export function Admin() {
 
   return (
     <main className="container mb-5">
+      <AdminNav />
       <Catalogo
         accion={(producto) => (
           <button

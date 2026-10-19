@@ -12,15 +12,17 @@ export class ErrorApi extends Error {
   }
 }
 
-type Metodo = 'GET' | 'POST' | 'PATCH' | 'DELETE'
+type Metodo = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
+/** Llama a la API. `cuerpo` se manda como JSON, salvo que sea FormData (subida de archivos). */
 export async function pedir<T>(ruta: string, metodo: Metodo = 'GET', cuerpo?: unknown): Promise<T> {
+  const esArchivo = cuerpo instanceof FormData
   let respuesta: Response
   try {
     respuesta = await fetch(`/api${ruta}`, {
       method: metodo,
-      headers: cuerpo === undefined ? undefined : { 'Content-Type': 'application/json' },
-      body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
+      headers: cuerpo === undefined || esArchivo ? undefined : { 'Content-Type': 'application/json' },
+      body: cuerpo === undefined ? undefined : esArchivo ? cuerpo : JSON.stringify(cuerpo),
       credentials: 'same-origin',
     })
   } catch {

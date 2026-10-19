@@ -26,17 +26,6 @@ function hoyYmd() {
 
 // --- Conversión de filas de la BD a JSON para el frontend ---
 
-export function productoJson(p: ProductoFila) {
-  return {
-    id: p.id,
-    nombre: p.nombre,
-    descripcion: p.descripcion,
-    precioMin: p.precio_min,
-    precioMax: p.precio_max,
-    stock: p.stock,
-  }
-}
-
 function pedidoJson(p: PedidoFila) {
   return {
     id: p.id,
@@ -74,11 +63,6 @@ function presupuestoJson(p: PresupuestoFila) {
 const productoPorId = db.prepare('SELECT * FROM productos WHERE id = ? AND activo = 1')
 const descontarStock = db.prepare('UPDATE productos SET stock = stock - 1 WHERE id = ? AND stock > 0')
 const devolverStock = db.prepare('UPDATE productos SET stock = stock + 1 WHERE id = ?')
-
-export function listarProductos() {
-  const filas = db.prepare('SELECT * FROM productos WHERE activo = 1 ORDER BY rowid').all() as unknown as ProductoFila[]
-  return filas.map(productoJson)
-}
 
 function obtenerProducto(id: string) {
   const producto = productoPorId.get(id) as ProductoFila | undefined

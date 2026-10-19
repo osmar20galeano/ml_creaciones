@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import { MulterError } from 'multer'
 import { ZodError } from 'zod'
 
 /** Error esperado que se devuelve tal cual al cliente. */
@@ -16,6 +17,11 @@ export function manejadorErrores(err: unknown, _req: Request, res: Response, _ne
   if (err instanceof ZodError) {
     const primero = err.issues[0]
     res.status(400).json({ error: primero?.message ?? 'Datos inválidos', campo: primero?.path.join('.') })
+    return
+  }
+  if (err instanceof MulterError) {
+    const mensaje = err.code === 'LIMIT_FILE_SIZE' ? 'La imagen pesa demasiado (máximo 5 MB).' : 'No se pudo subir la imagen.'
+    res.status(400).json({ error: mensaje })
     return
   }
   if (err instanceof ErrorHttp) {
