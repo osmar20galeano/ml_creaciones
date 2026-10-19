@@ -10,6 +10,7 @@ import {
   type Usuario,
 } from '../db.js'
 import { ErrorHttp } from '../errores.js'
+import { avisarCambioEstado, avisarPedidoCreado, avisarPresupuesto } from './notificaciones.js'
 import type { crearPedidoSchema, crearPresupuestoSchema } from './pedidos.schemas.js'
 
 type DatosPedido = z.infer<typeof crearPedidoSchema>
@@ -144,6 +145,7 @@ export function crearPedido(sesion: SesionPayload, datos: DatosPedido) {
     ) as unknown as PedidoFila
   })
 
+  avisarPedidoCreado(pedido)
   return pedidoJson(pedido)
 }
 
@@ -177,8 +179,8 @@ function obtenerPedido(id: number) {
 
 const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'cancelado']
 
-/** Admin: mueve el pedido de estado. Cancelar devuelve el stock. */
-export function cambiarEstado(id: number, estado: EstadoPedido) {
+/** Mueve el pedido de estado y avisa por correo. Cancelar devuelve el stock. */
+export function cambiarEstado(id: number, estado: EstadoPedido, porCliente = false) {
   const pedido = obtenerPedido(id)
   if (ESTADOS_FINALES.includes(pedido.estado)) {
     throw new ErrorHttp(400, `Este pedido ya está ${pedido.estado === 'entregado' ? 'entregado' : 'cancelado'} y no se puede modificar.`)
@@ -189,6 +191,7 @@ export function cambiarEstado(id: number, estado: EstadoPedido) {
     if (estado === 'cancelado') devolverStock.run(pedido.producto_id)
     return actualizarEstado.get(estado, id) as unknown as PedidoFila
   })
+  avisarCambioEstado(actualizado, porCliente)
   return pedidoJson(actualizado)
 }
 
@@ -201,7 +204,7 @@ export function cancelarPedidoPropio(sesion: SesionPayload, id: number) {
   if (pedido.estado !== 'pendiente') {
     throw new ErrorHttp(400, 'Solo puedes cancelar pedidos que todavía están pendientes. Escríbenos por WhatsApp.')
   }
-  return cambiarEstado(id, 'cancelado')
+  return cambiarEstado(id, 'cancelado', true)
 }
 
 // --- Presupuestos ---
@@ -223,6 +226,7 @@ export function crearPresupuesto(sesion: SesionPayload, datos: DatosPresupuesto)
     datos.costo,
     datos.detalles,
   ) as unknown as PresupuestoFila
+  if (sesion.rol === 'cliente') avisarPresupuesto(fila)
   return presupuestoJson(fila)
 }
 
