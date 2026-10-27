@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
+import imagenLienzo from '../assets/img/canvas_modelo_negocio.jpg'
 import { Aparecer } from '../components/canvas/Aparecer'
 import { CalculadoraEquilibrio } from '../components/canvas/CalculadoraEquilibrio'
 import { ContenidoBloque } from '../components/canvas/ContenidoBloque'
 import { DetalleBloque } from '../components/canvas/DetalleBloque'
-import { LienzoCanvas } from '../components/canvas/LienzoCanvas'
 import { TextoMarcado } from '../components/canvas/TextoMarcado'
 import { bloques, catalogo, conclusion, proyecto, sistemaWeb, type IdBloque } from '../data/canvas'
 import { negocio } from '../data/negocio'
@@ -213,10 +213,23 @@ export function ModeloCanvas() {
               <p className="canvas-etiqueta text-center">El lienzo</p>
               <h2 className="canvas-h2 text-center">Lienzo Canvas de {proyecto.nombre}</h2>
               <p className="text-center text-muted mb-4">
-                <i className="bi bi-hand-index me-1" />
-                Pasa el mouse sobre un bloque para ver con cuáles se conecta, y tócalo para leer su justificación.
+                <i className="bi bi-zoom-in me-1" />
+                Toca la imagen para abrirla en tamaño completo en otra pestaña.
               </p>
-              <LienzoCanvas onAbrir={setAbierto} />
+              <a href={imagenLienzo} target="_blank" rel="noopener noreferrer" className="d-block text-center">
+                <img
+                  src={imagenLienzo}
+                  alt={`Lienzo del Modelo de Negocio Canvas de ${proyecto.nombre}: socios clave, actividades clave, recursos clave, propuesta de valor, relación con los clientes, canales, segmentos de clientes, estructura de costos y fuentes de ingresos`}
+                  className="img-fluid rounded-4 shadow-sm"
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </a>
+              <p className="text-center mt-3 mb-0">
+                <a href={imagenLienzo} target="_blank" rel="noopener noreferrer" className="btn btn-outline-secondary btn-sm">
+                  <i className="bi bi-box-arrow-up-right me-1" />
+                  Abrir imagen en tamaño completo
+                </a>
+              </p>
             </Aparecer>
           </div>
         </section>
